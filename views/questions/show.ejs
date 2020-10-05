@@ -1,0 +1,60 @@
+<%-include("../partials/header.ejs")%>
+<div class="container">
+	<div class ="row">
+		<div class="col-md-3">
+			
+			<div class="list-group">
+				<li class="list-group-item">Info 1</li>
+				<li class="list-group-item">Info 2</li>
+				<li class="list-group-item">Info 3</li>
+			</div>
+		</div>
+		<div class="col-md-9">
+			<div class="thumbnail">
+				<p><%=question.question%></p>
+				<p>Submitted by - <%=question.author.username%></p>
+			    <% if(currentUser && question.author.id.equals(currentUser._id)){ %>
+				<div class="delete-form">	
+					
+					<a href="/home/<%=question._id%>/edit" class = "btn btn-primary">Edit</a>
+
+					<form method="POST" action ="/home/<%=question._id%>?_method=DELETE">
+						<button class="btn btn-danger"> Delete </button>
+					</form>
+					
+				</div>
+				<% }%>
+				<a href="/home"> Go back</a>
+			</div>
+			<div class="well">
+				<div class="text-right">
+					<a class="btn btn-success" href="/home/<%=question._id%>/answers/new">
+		Add Answer
+					</a>
+				</div>
+				<hr>
+				<% question.answers.forEach(function(allanswers){ %>
+					<div class="row">
+						<div class="col-md-12">
+							<strong><%=allanswers.author.username%></strong>
+							<span class="pull-right">10 days ago</span>
+							<p>
+								<%= allanswers.answer %> 	
+							</p>
+							<% if(currentUser && allanswers.author.id.equals(currentUser._id)){ %>
+							<div class="delete-form">
+								<a href="/home/<%=question._id%>/answers/<%=allanswers._id%>/edit" class = "btn btn-primary">Edit</a>
+
+								<form method="POST" action ="/home/<%=question._id%>/answers/<%=allanswers._id%>?_method=DELETE">
+									<button class="btn btn-danger"> Delete </button>
+								</form>
+							</div>
+							<% }%>
+						</div>
+					</div>
+				<% }); %>
+			</div>
+		</div>
+	</div>
+</div>
+<%-include("../partials/footer.ejs")%>
