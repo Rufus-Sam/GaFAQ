@@ -25,11 +25,11 @@ middlewareObj.checkQuestionOwnership =function(req,res,next){
 }
 middlewareObj.checkAnswerOwnership = function(req,res,next){
 	if(req.isAuthenticated()){
-		Answer.findById(req.params.comment_id,function(err,foundAnswer){
+		Answer.findById(req.params.answer_id,function(err,foundAnswer){
 		if(err || !foundAnswer){
 			res.redirect("back");
 		}else{
-			//does user own comment
+			//does user own answer
 			if(foundAnswer.author.id.equals(req.user._id)){
 				next();
 			}else{
