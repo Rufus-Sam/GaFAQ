@@ -14,7 +14,7 @@ router.get("/register",function(req,res){
 });
 //handle sign up logic
 router.post("/register",function(req,res){
-	var newUser = new User({username : req.body.username});
+	var newUser = new User({username : req.body.username, profile: req.body.profile});
 	User.register(newUser ,req.body.password,function(err,user){
 		if(err){
 			console.log("already signed up");
@@ -40,5 +40,21 @@ router.get("/logout",function(req,res){
 	req.logout();
 	res.redirect("/home");
 })
+
+router.get("/aboutUs", function(req, res){
+	res.render("aboutUs.ejs");
+});
+
+router.get("/contactUs", function(req, res){
+	res.render("contactUs.ejs");
+});
+
+router.post("/contactUs", function(req, res){
+	res.redirect("/home");
+});
+
+router.get("/help", function(req, res){
+	res.render("help.ejs");
+});
 
 module.exports = router

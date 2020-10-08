@@ -14,7 +14,11 @@ var qSchema = new mongoose.Schema({
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Answer"
 		}
-	]
+	],
+	tags: String,
+	date : 	{type: Date, default: Date.now},
+	userProfile: String
+
 });
 
 module.exports = mongoose.model("Question", qSchema);

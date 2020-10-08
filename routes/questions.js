@@ -1,14 +1,29 @@
 var express = require("express");
 var router  = express.Router();
 var Question = require("../models/question");
+var User     = require("../models/user");
 var middleware = require("../middleware");
+var Answer	= require("../models/answer");
 
 router.get("/", function(req, res){
 	Question.find({}, function(err, allquestions){
 		if(err){
 			console.log(err);
 		} else{
-			res.render("questions/home" ,{questions : allquestions});
+			User.find({}, function(err, allusers){
+				if(err){
+					console.log(err);
+				} else{
+					Answer.find({}, function(err, allanswers){
+						if(err){
+							console.log(err);
+						} else{
+							res.render("questions/home" ,{questions : allquestions, users: allusers, answers: allanswers});
+						}
+					});
+				}
+			});
+			
 		}
 	});
 	
@@ -23,10 +38,13 @@ router.post("/",middleware.isLoggedIn, function(req, res){
 		if(err){
 			console.log(err);
 		} else{
-			newlyCreatedQuestion.author.id=req.user._id;
-			newlyCreatedQuestion.author.username=req.user.username;
-			newlyCreatedQuestion.save();
-			res.redirect("/home");
+			User.findById(req.user._id, function(err, userFound){
+				newlyCreatedQuestion.author.id=req.user._id;
+				newlyCreatedQuestion.author.username=req.user.username;
+				newlyCreatedQuestion.userProfile = userFound.profile;
+				newlyCreatedQuestion.save();
+				res.redirect("/home");
+			});
 		}
 	});
 });
@@ -36,6 +54,7 @@ router.get("/:id", function(req, res){
 		if(err){
 			console.log(err);
 		} else {
+		
 			res.render("questions/show", {question : question});
 		}
 	});
@@ -58,6 +77,15 @@ router.put("/:id",middleware.checkQuestionOwnership,  function(req, res){
 });
 
 router.delete("/:id",middleware.checkQuestionOwnership,  function(req, res){
+	Question.findById(req.params.id, function(err, foundQuestion){
+		if(err){
+			console.log(err);
+		}  else{
+			for(var i=0;i<foundQuestion.answers.length;i++){
+				Answer.findByIdAndRemove(foundQuestion.answers[i], function(){});
+			}
+		}
+	});
 	Question.findByIdAndRemove(req.params.id, function(err){
 		if(err){
 			console.log(err);

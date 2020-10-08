@@ -2,6 +2,7 @@ var express = require("express");
 var router  = express.Router({mergeParams : true});
 var Question = require("../models/question");
 var Answer	= require("../models/answer");
+var User            = require("../models/user");
 var middleware = require("../middleware");
 
 router.get("/new",middleware.isLoggedIn, function(req, res){
@@ -26,14 +27,17 @@ router.post("/",middleware.isLoggedIn, function(req, res){
 				if(err){
 					console.log(err);
 				}else{
-					answer.author.id = req.user._id;
-					answer.author.username = req.user.username;
-					answer.save();	
+					User.findById(req.user._id, function(err, foundUser){
+						answer.author.id = req.user._id;
+						answer.author.username = req.user.username;
+						answer.userProfile = foundUser.profile;
+						answer.save();	
 
-					question.answers.push(answer);
-					question.save();
-					
-					res.redirect("/home/"+question._id);
+						question.answers.push(answer);
+						question.save();
+						
+						res.redirect("/home/"+question._id);
+					});
 				}
 			});
 		}
@@ -72,6 +76,12 @@ router.delete("/:answer_id",middleware.checkAnswerOwnership, function(req, res){
 		if(err){
 			console.log(err);
 		}else{
+			Question.findById(req.params.id, function(err, questionFound){
+				var index = questionFound.answers.indexOf(req.params.answer_id);
+				console.log(index);
+				questionFound.answers.splice(index,1);
+				questionFound.save();
+			});
 			res.redirect("/home/" + req.params.id);
 		}
 		
