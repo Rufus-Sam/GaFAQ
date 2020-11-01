@@ -14,7 +14,7 @@ router.get("/register",function(req,res){
 });
 //handle sign up logic
 router.post("/register",function(req,res){
-	var newUser = new User({username : req.body.username, profile: req.body.profile});
+	var newUser = new User({username : req.body.username, profile: req.body.profile, firstName:req.body.firstName, lastname:req.body.lastname, profession:req.body.profession, aboutMe:req.body.aboutMe});
 	User.register(newUser ,req.body.password,function(err,user){
 		if(err){
 			console.log("already signed up");

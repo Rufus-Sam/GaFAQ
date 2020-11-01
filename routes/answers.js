@@ -31,6 +31,7 @@ router.post("/",middleware.isLoggedIn, function(req, res){
 						answer.author.id = req.user._id;
 						answer.author.username = req.user.username;
 						answer.userProfile = foundUser.profile;
+						answer.likeCount = 0;
 						answer.save();	
 
 						question.answers.push(answer);
@@ -86,6 +87,22 @@ router.delete("/:answer_id",middleware.checkAnswerOwnership, function(req, res){
 		}
 		
 	})
+});
+
+router.post("/:answer_id/like",middleware.isLoggedIn, function(req, res){
+	Answer.findById(req.params.answer_id, function(err, answer){
+		if(err){
+			console.log(err);
+		}else{
+				if(!answer.likes.includes(req.user._id)){
+					answer.likes.push(req.user._id);
+					answer.likeCount = answer.likes.length;
+					answer.save();
+				}
+			res.redirect("/home/" + req.params.id);
+		}
+		
+	});	
 });
 
 function isLoggedIn(req,res,next){

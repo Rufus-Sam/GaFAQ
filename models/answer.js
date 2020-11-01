@@ -9,8 +9,11 @@ var aSchema = new mongoose.Schema({
 		},
 		username : String
 	},
-		userProfile: String,
-		date : 	{type: Date, default: Date.now},
+	
+	userProfile: String,
+	date : 	{type: Date, default: Date.now},
+	likes: [],
+	likeCount: Number
 	}
 );
 

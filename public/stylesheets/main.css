@@ -118,3 +118,27 @@ padding-left: 2em;
 #hometag{
 	font-size: 0.9em;
 }
+
+#profilePicHeader{
+	height:30px; 
+	width:30px; 
+	border-radius: 50%; 
+}
+
+.glyphicon-heart{
+	font-size: 1.5em;
+}
+
+#profilePicUserPage{
+	height:130px; 
+	width:130px; 
+	border-radius: 50%; 
+}
+
+.userPage{
+	margin-top: 5em;
+}
+
+#profileQuestions{
+	margin-top: 5em;
+}
